@@ -1,6 +1,6 @@
 ﻿namespace Entities.LinkModels
 {
-    public class LinkResourceBase //kaynaga ait linklerin organizasyonunu yapacak
+    public class LinkResourceBase 
     {
         public LinkResourceBase()
         {
