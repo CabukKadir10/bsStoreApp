@@ -24,7 +24,7 @@ namespace Services
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
 
-        private User? _user; //kullanıcı bilgilerinin tutulacagı yer
+        private User? _user; 
 
         public AuthenticationManager(ILoggerService logger, 
             IMapper mapper, 
@@ -37,12 +37,11 @@ namespace Services
             _configuration = configuration;
         }
 
-        //Güvenlik için token oluşturma
         public async Task<TokenDto> CreateToken(bool populateExp)
         {
-            var singinCredentials = GetSiginCredentials(); // kullanıcı bilgilerini alma
-            var claims = await GetClaims(); //hak, iddia, roller
-            var tokenOptions = GenerateTokenOptions(singinCredentials, claims); // üretme
+            var singinCredentials = GetSiginCredentials(); 
+            var claims = await GetClaims(); 
+            var tokenOptions = GenerateTokenOptions(singinCredentials, claims); 
 
             var refreshToken = GenerateRefreshToken();
             _user.RefreshToken = refreshToken;
@@ -61,32 +60,32 @@ namespace Services
             };
         }
 
-        //Kullanıcıyı kaydetme işlemi
+      
         public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto)
-        {                                 //Kullanıcı adı soyadı pasword maili nosu gibi özelliklerin tutuldugu yer.
-            var user = _mapper.Map<User>(userForRegistrationDto);//dtoyu nesneye cevirip user değişkenine atıyoruz
+        {                                 
+            var user = _mapper.Map<User>(userForRegistrationDto);
                             
             var result = await _userManager
-                .CreateAsync(user, userForRegistrationDto.Password); // kullanıcı adı soyadı ve şifresi oluşturulup sonuc değişkenşne atanır.
+                .CreateAsync(user, userForRegistrationDto.Password);
 
             if (result.Succeeded)
                 await _userManager.AddToRolesAsync(user, userForRegistrationDto.Roles);
-            //sonuc başarılı ise rol kısmına eklenir.
+          
             
             return result;
         }
 
-        //kullanıcı doğrulama fonksiyonu
+    
         public async Task<bool> ValideteUser(UserForAuthenticationDto userForAuthDto)
         {
-            _user = await _userManager.FindByNameAsync(userForAuthDto.UserName); //kullanıcı ismini usera atadık
+            _user = await _userManager.FindByNameAsync(userForAuthDto.UserName); 
 
             var result = (_user != null && await _userManager.CheckPasswordAsync(_user, userForAuthDto.Password));
-            //sonrasında atama işlemi olmuşmu ve şifreler eşleşip eşleşmediğini kontrol ediyoruz.
-            if (!result)// hata varsa hata mesaji döndürüyoruz
+           
+            if (!result)
                 _logger.LogWarning($"{nameof(ValideteUser)} : Authentication failed. Wrong userName or password");
 
-            return result; // hata yoksa kullanıcı doğrulama işlemi true döner.
+            return result; 
         }
 
         private SigningCredentials GetSiginCredentials()
@@ -101,14 +100,14 @@ namespace Services
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, _user.UserName)// username bilgisini alıyoruz
+                new Claim(ClaimTypes.Name, _user.UserName)
             };
 
-            var roles = await _userManager.GetRolesAsync(_user); //rolleri alıyoruz. list string şeklinde alıyoruz.
+            var roles = await _userManager.GetRolesAsync(_user); 
 
             foreach (var role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role)); // alınan her bir rolü claime cevirip listemize ekliyoruz
+                claims.Add(new Claim(ClaimTypes.Role, role)); 
             }
 
             return claims;
@@ -118,7 +117,7 @@ namespace Services
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
 
-            var tokenOptions = new JwtSecurityToken( //nesne ürettik
+            var tokenOptions = new JwtSecurityToken( 
                     issuer: jwtSettings["validIssuer"],
                     audience: jwtSettings["validAudience"],
                     claims: claims,
