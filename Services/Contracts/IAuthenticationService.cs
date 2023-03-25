@@ -10,9 +10,9 @@ namespace Services.Contracts
 {
     public interface IAuthenticationService
     {
-        Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto); // kullanıcı kaydetme
-        Task<bool> ValideteUser(UserForAuthenticationDto userForAuthDto); //kullanıcıyı doğrulama
-        Task<TokenDto> CreateToken(bool populateExp); // token oluşturma
-        Task<TokenDto> RefreshToken(TokenDto tokenDto); // token güncelleme
+        Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistrationDto); 
+        Task<bool> ValideteUser(UserForAuthenticationDto userForAuthDto); 
+        Task<TokenDto> CreateToken(bool populateExp); 
+        Task<TokenDto> RefreshToken(TokenDto tokenDto); 
     }
 }
