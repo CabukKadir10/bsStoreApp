@@ -22,13 +22,10 @@ namespace WebApi.Extensions
 {
     public static class ServicesExtensions
     {
-        // bu bir extension metotdur. extension metotlar statik olmalıdır.
         public static void ConfigureSqlContext(this IServiceCollection services, 
             IConfiguration configuration) => services.AddDbContext<RepositoryContext>(options =>
                     options.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
 
-        // crud fonksiyonlari için kullanılan fonksiyonların yazıldıgı interface cagırır.
-        // silme ekleme getirme işlemlerinin yapıldıgı yer.
         public static void ConfigureRepositoryManager(this IServiceCollection services) =>
             services.AddScoped<IRepositoryManager, RepositoryManager>(); 
         
@@ -99,9 +96,9 @@ namespace WebApi.Extensions
         {
             services.AddApiVersioning(opt =>
             {
-                opt.ReportApiVersions = true; // version bilgisini headıra ekliyoruz
-                opt.AssumeDefaultVersionWhenUnspecified = true; // kullanıcı version talep etmezse default versiyonu döndürür.
-                opt.DefaultApiVersion = new ApiVersion(1, 0); // default versionun belirtildiği parametredir
+                opt.ReportApiVersions = true; 
+                opt.AssumeDefaultVersionWhenUnspecified = true; 
+                opt.DefaultApiVersion = new ApiVersion(1, 0); 
                 opt.ApiVersionReader = new HeaderApiVersionReader("api-version");
                 opt.Conventions.Controller<BooksController>()
                     .HasApiVersion(new ApiVersion(1, 0));
