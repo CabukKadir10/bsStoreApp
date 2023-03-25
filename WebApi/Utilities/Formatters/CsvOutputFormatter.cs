@@ -11,15 +11,15 @@ namespace WebApi.Utilities.Formatters
         public CsvOutputFormatter()
         {
             SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("text/csv"));
-            SupportedEncodings.Add(Encoding.UTF8); // çıktı betimleyicisini tanımlandıgı yer
-            SupportedEncodings.Add(Encoding.Unicode); // ve kodlamalarını tanımlar
+            SupportedEncodings.Add(Encoding.UTF8);
+            SupportedEncodings.Add(Encoding.Unicode);
         }
 
         protected override bool CanWriteType(Type? type)
         {
             if (typeof(BookDto).IsAssignableFrom(type) ||
                 typeof(IEnumerable<BookDto>).IsAssignableFrom(type))
-            {// BookDto nesneleri veya BookDto koleksiyonlarının csv biçiminde yazılabilir olduguunu belirtir.
+            {
                 return base.CanWriteType(type);
             }
             return false;
@@ -27,8 +27,6 @@ namespace WebApi.Utilities.Formatters
         private static void FormatCsv(StringBuilder buffer, BookDto book)
         {
             buffer.AppendLine($"{book.Id}, {book.Title}, {book.Price}");
-//BookDto nesnesinin nasıl yazılacagını belirliyoruz. StringBuilder nesnesine bir BookDto nesnesi ekleyerek
-//csv biçiminde biçimlendirir
         }
 
         public override async Task WriteResponseBodyAsync(OutputFormatterWriteContext context,
