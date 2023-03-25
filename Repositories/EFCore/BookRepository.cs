@@ -18,10 +18,10 @@ namespace Repositories.EFCore
 
         }
 
-        public void CreateOneBook(Book book) => Create(book); // create fonksiyonu çağrılarak alınan özellikleri veri tabanına kaydeder.
-        public void DeleteOneBook(Book book) => Delete(book);// delete ile siler
+        public void CreateOneBook(Book book) => Create(book); 
+        public void DeleteOneBook(Book book) => Delete(book);
         public async Task<PagedList<Book>> GetAllBooksAsync(BookParameters bookParameters,
-            bool trackChanges)// trackchanges izlelip izlenmeme durumunu ifade eder.
+            bool trackChanges)
         {
             var books = await FindAll(trackChanges)
                 .FilterBooks(bookParameters.MinPrice, bookParameters.MaxPrice)
