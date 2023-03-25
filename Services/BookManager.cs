@@ -18,39 +18,39 @@ namespace Services
     public class BookManager : IBookService
     {
         private readonly ICategoryService _categoryService;
-        private readonly IRepositoryManager _manager; // kitap ekleme silme arama güncelleme gibi işlemlerin yapılacgı yerdir.
-        private readonly ILoggerService _logger; // hata ayıklama, bilgi, uyarı gibi mesajları döndürmemizi sağlayan yerdir.
-        private readonly IMapper _mapper; // tür dönüşümlerini yapacagımız yerdir.
-        private readonly IBookLinks _bookLinks; // linkleme işlemlerini üstlenen yerdir.
+        private readonly IRepositoryManager _manager; 
+        private readonly ILoggerService _logger; 
+        private readonly IMapper _mapper; 
+        private readonly IBookLinks _bookLinks; 
 
         public BookManager(IRepositoryManager manager,
             ILoggerService logger,
             IMapper mapper, IBookLinks bookLinks, ICategoryService categoryService)
         {
-            _manager = manager; //depency İnjection ile ilgili interface üzerinden rahatcana istenilen fonksiyona erişebiliyoruz
+            _manager = manager; 
             _logger = logger;
             _mapper = mapper;
             _bookLinks = bookLinks;
             _categoryService = categoryService;
         }
-        // dto title ve price döndürüyor.
+       
         public async Task<BookDto> CreateOneBookAsync(BookDtoForInsertion bookDto)
         {
             var category = await _categoryService
                 .GetOneCategoryByIdAsync(bookDto.CategoryId, false);
 
-            var entity = _mapper.Map<Book>(bookDto); // dtoyu book nesnesine dönüştürüyor. sonrasında özellikler entitye atar
+            var entity = _mapper.Map<Book>(bookDto); 
             
-            _manager.Book.CreateOneBook(entity); // manager üzerinden create fonksiyonuna ulaşıp entity özellikleri ile veri tabanına ekleme yapar.
-            await _manager.SaveAsync(); // veri tabanına eklenen özellikler kaydedilir.
-            return _mapper.Map<BookDto>(entity); // sonrasında entity dto ya dönüşür. sonuç olarak bize title ve price döner.
+            _manager.Book.CreateOneBook(entity); 
+            await _manager.SaveAsync(); 
+            return _mapper.Map<BookDto>(entity); 
         }
 
         public async Task DeleteOneBookAsync(int id, bool trackChanges)
         {
-            var entity = await GetOneBookByIdAndCheckExists(id, trackChanges);// ilgili id'ye sahip olan kitap varsa kontrol edilir.
-            _manager.Book.DeleteOneBook(entity); // varsa kitap burada silinir
-            await _manager.SaveAsync();// kaydetme işlemi yapılır.
+            var entity = await GetOneBookByIdAndCheckExists(id, trackChanges);
+            _manager.Book.DeleteOneBook(entity); 
+            await _manager.SaveAsync();
         }
 
         public async Task<(LinkResponse linkResponse, MetaData metaData)>
